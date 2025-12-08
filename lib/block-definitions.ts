@@ -1,0 +1,141 @@
+import type { BlockDefinition } from "@/lib/report-builder-types"
+
+export const BLOCK_DEFINITIONS: Record<string, BlockDefinition> = {
+  "basic-info": {
+    id: "basic-info",
+    name: "Basic Info",
+    description: "Name, age, gender, BMI, current & goal weight",
+    category: "predefined",
+    defaultConfig: {
+      showWelcome: true,
+      name: "{{name}}",
+      kg_from_goal: "{{kg_from_goal}}",
+      current_weight_kg: "{{current_weight_kg}}",
+      height_cm: "{{height_cm}}",
+      bmi: "{{bmi}}",
+      goal_weight_kg: "{{goal_weight_kg}}",
+      header_title: "Your Wellness Profile",
+      header_gradient_from: "#00B8B0",
+      header_gradient_to: "#009B93",
+    },
+  },
+  "inspiration-zone": {
+    id: "inspiration-zone",
+    name: "Inspiration Zone",
+    description: "Motivational playlist + leaderboard + personal why",
+    category: "predefined",
+    defaultConfig: {
+      playlistDescription: "Focus Playlist",
+      motivationalLine: "Keep going! You're doing amazing!",
+      playlistUrl: "https://example.com/playlist",
+      leaderboard_rank: "{{leaderboard_rank}}",
+      journey_reason: "{{journey_reason}}",
+      weeks_to_important_event: "{{weeks_to_important_event}}",
+    },
+  },
+  "next-session": {
+    id: "next-session",
+    name: "Next Session",
+    description: "Shows next scheduled consultation and reschedule button",
+    category: "predefined",
+    defaultConfig: {
+      sessionDate: "{{next_session_date}}",
+      sessionTime: "{{next_session_time}}",
+      daysUntil: "{{days_until_next_session}}",
+      ctaText: "Reschedule Session",
+      rescheduleUrl: "{{reschedule_url}}",
+    },
+  },
+  "monthly-summary": {
+    id: "monthly-summary",
+    name: "Monthly Summary",
+    description: "Attendance, cancellations, and performance commentary",
+    category: "predefined",
+    defaultConfig: {
+      commentary: "Great work this month!",
+    },
+  },
+  "progress-consistency": {
+    id: "progress-consistency",
+    name: "Weight Progress & Consistency",
+    description: "Weight trend, sessions graph, consistency score",
+    category: "predefined",
+    defaultConfig: {
+      motivationalText: "You've been very consistent—keep it up!",
+      totalKgLost: "{{total_kg_lost}}",
+      consistencyScore: "{{consistency_score}}",
+    },
+  },
+  "package-promotion": {
+    id: "package-promotion",
+    name: "Package Promotion",
+    description: "Upsell wellness packages (e.g., Cryo360)",
+    category: "predefined",
+    defaultConfig: {
+      title: "Cryo360: Freeze Away Fat",
+      description: "Shape your body and elevate your life journey",
+      bullets: [
+        "Non-invasive fat reduction",
+        "No surgery or downtime",
+        "Precise temperature control",
+        "Safe & FDA-approved technology",
+      ],
+      buttonText: "Talk to an advisor",
+      advisorUrl: "{{advisor_url}}",
+      promoImageUrl: "{{promo_image_url}}",
+    },
+  },
+  "before-after": {
+    id: "before-after",
+    name: "Before & After",
+    description: "Side-by-side images",
+    category: "predefined",
+    defaultConfig: {
+      beforeCaption: "Before",
+      afterCaption: "After",
+      beforeImageUrl: "{{before_image_url}}",
+      afterImageUrl: "{{after_image_url}}",
+    },
+  },
+  "referral-offer": {
+    id: "referral-offer",
+    name: "Referral & Offer",
+    description: "Refer-a-friend incentive",
+    category: "predefined",
+    defaultConfig: {
+      discountPercentage: 20,
+      referralUrl: "",
+    },
+  },
+  "custom-text": {
+    id: "custom-text",
+    name: "Custom Text",
+    description: "Heading + subheading + body text",
+    category: "custom",
+    defaultConfig: {
+      heading: "Your Heading",
+      subheading: "Your Subheading",
+      bodyText: "Your content here",
+    },
+  },
+  "text-image": {
+    id: "text-image",
+    name: "Text + Image",
+    description: "Promo or info section with image",
+    category: "custom",
+    defaultConfig: {
+      heading: "Your Heading",
+      subheading: "Your Subheading",
+      bodyText: "Your content here",
+      imageUrl: "{{image_url}}",
+    },
+  },
+  divider: {
+    id: "divider",
+    name: "Divider / Spacer",
+    description: "Visual separator between sections",
+    category: "custom",
+    defaultConfig: {},
+  },
+}
+
