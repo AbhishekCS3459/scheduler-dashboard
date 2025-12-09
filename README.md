@@ -1,6 +1,6 @@
 # API Requirements for vecura Dashboard
 
-This document lists all the APIs required to make the VC-URA Dashboard fully functional. These APIs should be implemented in the backend service layer according to the project's architecture guidelines.
+This document lists all the APIs required to make the vecura Dashboard fully functional. These APIs should be implemented in the backend service layer according to the project's architecture guidelines.
 
 ## Table of Contents
 
