@@ -290,31 +290,3 @@ This document lists all the APIs required to make the VC-URA Dashboard fully fun
 
 7. **File Uploads**: Support multipart/form-data or base64 encoding for file uploads when needed.
 
----
-
-## Implementation Priority
-
-### Phase 1 (Core Functionality)
-1. Authentication & User Management
-2. Branch Management
-3. Session/Appointment Management
-4. Staff Management
-5. Session Types
-6. Patient Management
-
-### Phase 2 (Analytics)
-7. Branch Analytics
-
-### Phase 3 (Enhancements)
-8. Additional filtering and search capabilities
-
----
-
-## Integration Notes
-
-- All API endpoints should follow RESTful conventions
-- Use the auto-generated API client from OpenAPI specs when available (see `api-client/` folder)
-- Implement service layer files in `services/` folder that use the API client
-- Keep data transformation logic in `utils/` folder
-- Ensure proper error handling and response management in service layer
-
