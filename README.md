@@ -66,6 +66,27 @@ This document lists all the APIs required to make the VC-URA Dashboard fully fun
 - **Response**: Success confirmation
 
 ---
+---
+
+## Branch Management
+
+### Get All Branches
+- **Endpoint**: `GET /api/branches`
+- **Description**: Returns list of all branches (filtered by user role permissions)
+- **Response**: Array of Branch objects with `id`, `name`, `city`, `openingHours`
+
+### Get Branch by ID
+- **Endpoint**: `GET /api/branches/:branchId`
+- **Description**: Returns detailed information for a specific branch
+- **Response**: Branch object
+
+### Update Branch Settings
+- **Endpoint**: `PUT /api/branches/:branchId/settings` or `PATCH /api/branches/:branchId`
+- **Description**: Updates branch settings
+- **Request Body**: All data associated with the branch entity
+- **Response**: Updated branch object with all associated data
+
+---
 
 ## Staff Management
 
