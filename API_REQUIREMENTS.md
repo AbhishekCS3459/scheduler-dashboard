@@ -10,24 +10,17 @@ This document lists all the APIs required to make the VC-URA Dashboard fully fun
 4. [Staff Management](#staff-management)
 5. [Session Types](#session-types)
 6. [Branch Analytics](#branch-analytics)
-7. [Report Builder & Templates](#report-builder--templates)
-8. [Report Publishing & History](#report-publishing--history)
-9. [Patient Search](#patient-search)
+7. [Patient Management](#patient-management)
 
 ---
 
 ## Authentication & User Management
 
-### Get Current User
-- **Endpoint**: `GET /api/auth/me` or `GET /api/users/me`
-- **Description**: Returns the currently authenticated user information
-- **Response**: User object with `id`, `name`, `email`, `role`, and optional `branchId`
-
 ### Login
 - **Endpoint**: `POST /api/auth/login`
 - **Description**: Authenticate user and return session/token
-- **Request Body**: `{ email: string, password: string }`
-- **Response**: Authentication token and user object
+- **Request Body**: All authentication data associated with the user entity (e.g., email, password)
+- **Response**: Authentication token and user object with all associated data
 
 ---
 
@@ -45,18 +38,9 @@ This document lists all the APIs required to make the VC-URA Dashboard fully fun
 
 ### Update Branch Settings
 - **Endpoint**: `PUT /api/branches/:branchId/settings` or `PATCH /api/branches/:branchId`
-- **Description**: Updates branch opening hours and settings
-- **Request Body**: 
-  ```json
-  {
-    "openingHours": {
-      "Monday": { "isOpen": true, "startTime": "09:00", "endTime": "17:00" },
-      "Tuesday": { "isOpen": true, "startTime": "09:00", "endTime": "17:00" },
-      ...
-    }
-  }
-  ```
-- **Response**: Updated branch object
+- **Description**: Updates branch settings
+- **Request Body**: All data associated with the branch entity
+- **Response**: Updated branch object with all associated data
 
 ---
 
@@ -76,50 +60,26 @@ This document lists all the APIs required to make the VC-URA Dashboard fully fun
 ### Create Session/Booking
 - **Endpoint**: `POST /api/sessions`
 - **Description**: Creates a new appointment/session
-- **Request Body**:
-  ```json
-  {
-    "patientName": "string",
-    "patientId": "string (optional)",
-    "phone": "string (optional)",
-    "therapyType": "string",
-    "staffId": "string",
-    "branchId": "string",
-    "date": "YYYY-MM-DD",
-    "startTime": "HH:mm",
-    "endTime": "HH:mm",
-    "notes": "string (optional)"
-  }
-  ```
-- **Response**: Created Session object
+- **Request Body**: All data associated with the session entity
+- **Response**: Created Session object with all associated data
 
 ### Update Session
 - **Endpoint**: `PUT /api/sessions/:sessionId` or `PATCH /api/sessions/:sessionId`
 - **Description**: Updates session details (for rescheduling or status changes)
-- **Request Body**: Partial Session object with fields to update
-- **Response**: Updated Session object
+- **Request Body**: All data associated with the session entity (or partial data for PATCH)
+- **Response**: Updated Session object with all associated data
 
 ### Update Session Status
 - **Endpoint**: `PATCH /api/sessions/:sessionId/status`
 - **Description**: Updates only the status of a session
-- **Request Body**: 
-  ```json
-  {
-    "status": "Planned" | "Completed" | "No-show" | "Conflict"
-  }
-  ```
-- **Response**: Updated Session object
+- **Request Body**: All data associated with the session status
+- **Response**: Updated Session object with all associated data
 
 ### Update WhatsApp Status
 - **Endpoint**: `PATCH /api/sessions/:sessionId/whatsapp-status`
 - **Description**: Updates the WhatsApp follow-up status
-- **Request Body**: 
-  ```json
-  {
-    "whatsappStatus": "Confirmed" | "No response" | "Cancelled"
-  }
-  ```
-- **Response**: Updated Session object
+- **Request Body**: All data associated with the WhatsApp status
+- **Response**: Updated Session object with all associated data
 
 ### Delete Session
 - **Endpoint**: `DELETE /api/sessions/:sessionId`
@@ -140,63 +100,32 @@ This document lists all the APIs required to make the VC-URA Dashboard fully fun
 ### Create Staff
 - **Endpoint**: `POST /api/staff`
 - **Description**: Adds a new staff member
-- **Request Body**:
-  ```json
-  {
-    "name": "string",
-    "gender": "M" | "F",
-    "role": "Therapist" | "Nutritionist" | "Coach",
-    "phone": "string",
-    "sessionTypes": ["string"],
-    "branchId": "string",
-    "availability": {}
-  }
-  ```
-- **Response**: Created Staff object
+- **Request Body**: All data associated with the staff entity
+- **Response**: Created Staff object with all associated data
 
 ### Update Staff
 - **Endpoint**: `PUT /api/staff/:staffId` or `PATCH /api/staff/:staffId`
 - **Description**: Updates staff information
-- **Request Body**: Partial Staff object with fields to update
-- **Response**: Updated Staff object
+- **Request Body**: All data associated with the staff entity (or partial data for PATCH)
+- **Response**: Updated Staff object with all associated data
 
 ### Update Staff Availability
 - **Endpoint**: `PATCH /api/staff/:staffId/availability`
 - **Description**: Updates staff availability for specific dates
-- **Request Body**:
-  ```json
-  {
-    "date": "YYYY-MM-DD",
-    "available": boolean,
-    "startTime": "HH:mm (optional)",
-    "endTime": "HH:mm (optional)"
-  }
-  ```
-- **Response**: Updated Staff object
+- **Request Body**: All data associated with the staff availability
+- **Response**: Updated Staff object with all associated data
 
 ### Update Staff Working Hours
 - **Endpoint**: `PATCH /api/staff/:staffId/working-hours`
 - **Description**: Updates working hours for a specific date
-- **Request Body**:
-  ```json
-  {
-    "date": "YYYY-MM-DD",
-    "startTime": "HH:mm",
-    "endTime": "HH:mm"
-  }
-  ```
-- **Response**: Updated Staff object
+- **Request Body**: All data associated with the working hours
+- **Response**: Updated Staff object with all associated data
 
 ### Update Staff Session Types
 - **Endpoint**: `PATCH /api/staff/:staffId/session-types`
 - **Description**: Updates the session types a staff member can handle
-- **Request Body**:
-  ```json
-  {
-    "sessionTypes": ["string"]
-  }
-  ```
-- **Response**: Updated Staff object
+- **Request Body**: All data associated with the session types
+- **Response**: Updated Staff object with all associated data
 
 ### Delete Staff
 - **Endpoint**: `DELETE /api/staff/:staffId`
@@ -215,20 +144,14 @@ This document lists all the APIs required to make the VC-URA Dashboard fully fun
 ### Create Session Type
 - **Endpoint**: `POST /api/session-types`
 - **Description**: Creates a new session type
-- **Request Body**:
-  ```json
-  {
-    "name": "string",
-    "durationMinutes": number
-  }
-  ```
-- **Response**: Created SessionType object
+- **Request Body**: All data associated with the session type entity
+- **Response**: Created SessionType object with all associated data
 
 ### Update Session Type
 - **Endpoint**: `PUT /api/session-types/:sessionTypeId` or `PATCH /api/session-types/:sessionTypeId`
 - **Description**: Updates a session type
-- **Request Body**: Partial SessionType object
-- **Response**: Updated SessionType object
+- **Request Body**: All data associated with the session type entity (or partial data for PATCH)
+- **Response**: Updated SessionType object with all associated data
 
 ### Delete Session Type
 - **Endpoint**: `DELETE /api/session-types/:sessionTypeId`
@@ -267,249 +190,78 @@ This document lists all the APIs required to make the VC-URA Dashboard fully fun
   - `customDate` (optional): "YYYY-MM-DD"
   - `page` (optional): Page number for pagination
   - `rowsPerPage` (optional): Number of rows per page
-- **Response**: Object with:
-  ```json
-  {
-    "data": [
-      {
-        "date": "YYYY-MM-DD",
-        "totalAppointments": number,
-        "whatsappBookings": number,
-        "noShows": number,
-        "followedUp": number,
-        "messageYes": number,
-        "arrivalsAfterFollowUp": number
-      }
-    ],
-    "total": number,
-    "page": number,
-    "rowsPerPage": number
-  }
-  ```
+- **Response**: Object with all data associated with daily analytics breakdown including pagination metadata
 
 ### Get All Branches Daily Analytics
 - **Endpoint**: `GET /api/analytics/branches/all/daily`
 - **Description**: Returns daily breakdown across all branches
 - **Query Parameters**: Same as above
-- **Response**: Same structure as above
+- **Response**: Object with all data associated with daily analytics breakdown including pagination metadata
 
 ---
 
-## Report Builder & Templates
+## Patient Management
 
-### Get Templates
-- **Endpoint**: `GET /api/templates`
-- **Description**: Returns list of all report templates
-- **Response**: Array of Template objects with `id`, `name`, `description`, `tags`, `blocks`, `createdAt`, `lastEditedAt`
-
-### Get Template by ID
-- **Endpoint**: `GET /api/templates/:templateId`
-- **Description**: Returns a specific template with all blocks
-- **Response**: Template object
-
-### Create Template
-- **Endpoint**: `POST /api/templates`
-- **Description**: Creates a new report template
-- **Request Body**:
-  ```json
-  {
-    "name": "string",
-    "description": "string (optional)",
-    "tags": ["string"],
-    "blocks": [
-      {
-        "id": "string",
-        "type": "basic-info" | "inspiration-zone" | ...,
-        "config": {},
-        "order": number
-      }
-    ]
-  }
-  ```
-- **Response**: Created Template object
-
-### Update Template
-- **Endpoint**: `PUT /api/templates/:templateId` or `PATCH /api/templates/:templateId`
-- **Description**: Updates an existing template
-- **Request Body**: Partial or full Template object
-- **Response**: Updated Template object
-
-### Duplicate Template
-- **Endpoint**: `POST /api/templates/:templateId/duplicate`
-- **Description**: Creates a copy of an existing template
-- **Request Body** (optional):
-  ```json
-  {
-    "name": "string (optional - defaults to 'Original Name (Copy)')"
-  }
-  ```
-- **Response**: New duplicated Template object
-
-### Delete Template
-- **Endpoint**: `DELETE /api/templates/:templateId`
-- **Description**: Deletes a template
-- **Response**: Success confirmation
-
----
-
-## Report Publishing & History
-
-### Publish Template
-- **Endpoint**: `POST /api/templates/:templateId/publish`
-- **Description**: Publishes a template to patients via WhatsApp
-- **Request Body**:
-  ```json
-  {
-    "csvData": "string (base64 encoded CSV or file)",
-    "variableMapping": {
-      "{{variable1}}": "csv_column1",
-      "{{variable2}}": "csv_column2"
-    },
-    "cohortTag": "string (optional)"
-  }
-  ```
-- **Response**: Publish job object with `jobId`, `status`, `numberOfPatients`
-
-### Get Publishing History
-- **Endpoint**: `GET /api/publish/history`
-- **Description**: Returns list of all template publishes
+### Get All Patients
+- **Endpoint**: `GET /api/patients`
+- **Description**: Returns list of all patients
 - **Query Parameters**:
-  - `page` (optional): Page number
-  - `limit` (optional): Results per page
-- **Response**: Array of PublishRecord objects with:
-  - `id`, `templateName`, `publishedOn`, `numberOfPatients`
-  - `cohortTag`, `status` (completed | scheduled | failed)
-
-### Get Publish Record Details
-- **Endpoint**: `GET /api/publish/history/:publishId`
-- **Description**: Returns detailed information about a specific publish record
-- **Response**: PublishRecord object with `patientData` array containing:
-  - `id`, `name`, `reportLink`
-
-### Get Patient Report
-- **Endpoint**: `GET /api/reports/patients/:patientId/:reportId`
-- **Description**: Returns a generated patient report
-- **Response**: Report HTML/PDF or report data object
-
----
-
-## Patient Search
-
-### Search Patients
-- **Endpoint**: `GET /api/patients/search`
-- **Description**: Search for patients by name or phone number (used in booking modal)
-- **Query Parameters**:
-  - `q`: Search query string
-  - `limit` (optional): Maximum number of results
-- **Response**: Array of Patient objects with `id`, `name`, `phone`, `patientId`
+  - `branchId` (optional): Filter by branch
+  - `page` (optional): Page number for pagination
+  - `limit` (optional): Number of results per page
+- **Response**: Array of Patient objects with all associated data
 
 ### Get Patient by ID
 - **Endpoint**: `GET /api/patients/:patientId`
 - **Description**: Returns detailed patient information
-- **Response**: Patient object
+- **Response**: Patient object with all associated data
+
+### Search Patients
+- **Endpoint**: `GET /api/patients/search`
+- **Description**: Search for patients by name, phone number, or other criteria
+- **Query Parameters**:
+  - `q`: Search query string
+  - `limit` (optional): Maximum number of results
+- **Response**: Array of Patient objects with all associated data
+
+### Create Patient
+- **Endpoint**: `POST /api/patients`
+- **Description**: Creates a new patient record
+- **Request Body**: All data associated with the patient entity
+- **Response**: Created Patient object with all associated data
+
+### Update Patient
+- **Endpoint**: `PUT /api/patients/:patientId` or `PATCH /api/patients/:patientId`
+- **Description**: Updates patient information
+- **Request Body**: All data associated with the patient entity (or partial data for PATCH)
+- **Response**: Updated Patient object with all associated data
+
+### Delete Patient
+- **Endpoint**: `DELETE /api/patients/:patientId`
+- **Description**: Deletes a patient record
+- **Response**: Success confirmation
 
 ---
 
 ## Data Types Reference
 
 ### User
-```typescript
-{
-  id: string
-  name: string
-  email: string
-  role: "super_admin" | "branch_admin"
-  branchId?: string
-}
-```
+- Contains all data associated with a user entity (e.g., `id`, `name`, `email`, `role`, `branchId`, etc.)
 
 ### Branch
-```typescript
-{
-  id: string
-  name: string
-  city: string
-  openingHours: {
-    [day: string]: {
-      isOpen: boolean
-      startTime: string
-      endTime: string
-    }
-  }
-}
-```
+- Contains all data associated with a branch entity (e.g., `id`, `name`, `city`, `openingHours`, etc.)
 
 ### Session
-```typescript
-{
-  id: string
-  patientName: string
-  patientId: string
-  phone: string
-  therapyType: string
-  staffId: string
-  branchId: string
-  date: string // YYYY-MM-DD
-  startTime: string // HH:mm
-  endTime: string // HH:mm
-  status: "Planned" | "Completed" | "No-show" | "Conflict"
-  whatsappStatus: "Confirmed" | "No response" | "Cancelled"
-  notes?: string
-}
-```
+- Contains all data associated with a session/appointment entity (e.g., `id`, `patientName`, `patientId`, `phone`, `therapyType`, `staffId`, `branchId`, `date`, `startTime`, `endTime`, `status`, `whatsappStatus`, `notes`, etc.)
 
 ### Staff
-```typescript
-{
-  id: string
-  name: string
-  gender: "M" | "F"
-  role: "Therapist" | "Nutritionist" | "Coach"
-  phone: string
-  sessionTypes: string[]
-  availability: {
-    [date: string]: {
-      available: boolean
-      startTime?: string
-      endTime?: string
-    }
-  }
-  branchId: string
-}
-```
+- Contains all data associated with a staff member entity (e.g., `id`, `name`, `gender`, `role`, `phone`, `sessionTypes`, `availability`, `branchId`, etc.)
 
 ### SessionType
-```typescript
-{
-  id: string
-  name: string
-  durationMinutes: number
-}
-```
+- Contains all data associated with a session type entity (e.g., `id`, `name`, `durationMinutes`, etc.)
 
-### Template
-```typescript
-{
-  id: string
-  name: string
-  description: string
-  tags: string[]
-  blocks: Block[]
-  createdAt: Date
-  lastEditedAt: Date
-  layoutType?: "predefined" | "custom"
-}
-```
-
-### Block
-```typescript
-{
-  id: string
-  type: BlockType
-  config: Record<string, any>
-  order: number
-}
-```
+### Patient
+- Contains all data associated with a patient entity (e.g., `id`, `name`, `phone`, `patientId`, `branchId`, etc.)
 
 ---
 
@@ -536,7 +288,7 @@ This document lists all the APIs required to make the VC-URA Dashboard fully fun
 
 6. **Date Formats**: Use ISO 8601 date format (YYYY-MM-DD) for dates and HH:mm for times.
 
-7. **File Uploads**: For CSV upload in template publishing, support multipart/form-data or base64 encoding.
+7. **File Uploads**: Support multipart/form-data or base64 encoding for file uploads when needed.
 
 ---
 
@@ -548,15 +300,13 @@ This document lists all the APIs required to make the VC-URA Dashboard fully fun
 3. Session/Appointment Management
 4. Staff Management
 5. Session Types
+6. Patient Management
 
-### Phase 2 (Analytics & Reports)
-6. Branch Analytics
-7. Report Builder & Templates
-8. Report Publishing & History
+### Phase 2 (Analytics)
+7. Branch Analytics
 
 ### Phase 3 (Enhancements)
-9. Patient Search
-10. Additional filtering and search capabilities
+8. Additional filtering and search capabilities
 
 ---
 

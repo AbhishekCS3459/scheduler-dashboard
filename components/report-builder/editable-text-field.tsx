@@ -3,7 +3,7 @@
 import type React from "react"
 
 import type { Variable } from "@/lib/variables"
-import { extractVariableName, formatVariable, isVariable } from "@/lib/variables"
+import { extractVariableName, formatVariable, isVariable, sanitizeVariableBaseName, sanitizeVariableName, stripVariablePrefix } from "@/lib/variables"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { VariableHint } from "./variable-hint"
 
@@ -80,11 +80,8 @@ export function EditableTextField({
 
   const sanitizedVariableName = useMemo(() => {
     if (!variableName) return ""
-    const base = variableName.replace(/[{}]/g, "").trim().toLowerCase()
-    const slug = base.replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "")
-    const prefix = variablePrefix ? variablePrefix.replace(/[^a-z0-9]+/gi, "_").toLowerCase() : ""
-    const withPrefix = prefix ? `${prefix}_${slug}` : slug
-    return withPrefix || "variable"
+    // Use shared utility function that handles prefix stripping and sanitization
+    return sanitizeVariableName(variableName, variablePrefix)
   }, [variableName, variablePrefix])
 
   const handleSelect = (e: React.SyntheticEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -94,7 +91,19 @@ export function EditableTextField({
     if (end > start) {
       const selected = value.substring(start, end)
       setSelectionRange({ start, end })
-      setVariableName(selected)
+      
+      // If the selected text is already a variable token, extract just the variable name
+      // Otherwise, use the selected text as-is
+      let baseName: string
+      if (isVariable(selected)) {
+        baseName = extractVariableName(selected) || selected
+      } else {
+        baseName = selected
+      }
+      
+      // Strip prefix from selected text before storing using shared utility
+      baseName = stripVariablePrefix(baseName, variablePrefix)
+      setVariableName(baseName)
     } else {
       setSelectionRange(null)
     }
@@ -106,8 +115,20 @@ export function EditableTextField({
     const currentSelection = value.substring(start, end)
     if (!currentSelection) return
 
-    const varId = sanitizedVariableName || "variable"
-    const variableToken = formatVariable(varId)
+    // If the selection is already a variable token, extract the name first to avoid double-formatting
+    let baseName: string
+    if (isVariable(currentSelection)) {
+      baseName = extractVariableName(currentSelection) || variableName
+    } else {
+      // Use the variable name from the input field (already stripped of prefix during handleSelect)
+      baseName = stripVariablePrefix(variableName, variablePrefix)
+    }
+    
+    // Sanitize and format the variable name
+    // Use only the base name (without prefix) for the variable in the template
+    // The prefix is only used for context/validation during creation, not in the final variable name
+    const sanitizedBaseName = sanitizeVariableBaseName(baseName) || "variable"
+    const variableToken = formatVariable(sanitizedBaseName)
     const newValue = `${value.substring(0, start)}${variableToken}${value.substring(end)}`
     onChange(newValue)
     setSelectionRange(null)
@@ -121,7 +142,11 @@ export function EditableTextField({
       <span className="text-xs text-muted-foreground">Mark selection as variable</span>
       <input
         value={sanitizedVariableName}
-        onChange={(e) => setVariableName(e.target.value)}
+        onChange={(e) => {
+          // Strip prefix from user input before storing using shared utility
+          const baseName = stripVariablePrefix(e.target.value, variablePrefix)
+          setVariableName(baseName)
+        }}
         className="text-xs border border-slate-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-400"
         placeholder="variable_name"
       />
